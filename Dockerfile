@@ -1,15 +1,22 @@
-FROM nginx:alpine
+FROM node:18-alpine
 
-# Remove default nginx static content
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy package files
+COPY package.json package-lock.json* ./
 
-# Copy the built static site
-COPY dist/ /usr/share/nginx/html/
+# Install only production dependencies
+RUN npm install --omit=dev express pg
 
-# Expose port 80
-EXPOSE 80
+# Copy app files
+COPY server.js ./
+COPY dist/ ./dist/
 
-CMD ["nginx", "-g", "daemon off;"]
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
+    CMD wget -qO- http://localhost:3000/ || exit 1
+
+CMD ["node", "server.js"]

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="We're launching soon! Drop your number to get notified." />
+        <meta name="description" content="We're launching soon! Drop your details to get notified." />
         <meta name="author" content="" />
         <title>Coming Soon</title>
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
@@ -16,6 +16,32 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <style>
+            .signup-form .form-control {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                color: #fff;
+                padding: 0.7rem 1rem;
+                font-size: 0.95rem;
+                backdrop-filter: blur(4px);
+                transition: all 0.3s ease;
+            }
+            .signup-form .form-control:focus {
+                background: rgba(255, 255, 255, 0.18);
+                border-color: rgba(255, 255, 255, 0.5);
+                color: #fff;
+                box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
+            }
+            .signup-form .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+            .signup-form .form-label {
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 0.85rem;
+                font-weight: 500;
+                margin-bottom: 0.3rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
             .phone-input-group {
                 display: flex;
                 align-items: center;
@@ -27,8 +53,8 @@
                 border-right: none;
                 border-radius: 0.375rem 0 0 0.375rem;
                 color: #fff;
-                padding: 0.6rem 0.75rem;
-                font-size: 1rem;
+                padding: 0.7rem 0.75rem;
+                font-size: 0.95rem;
                 font-weight: 600;
                 white-space: nowrap;
                 backdrop-filter: blur(4px);
@@ -36,34 +62,94 @@
                 align-items: center;
                 gap: 0.4rem;
             }
-            .phone-prefix img {
-                width: 22px;
-                height: 15px;
-                border-radius: 2px;
-            }
             #phone {
                 border-radius: 0 0.375rem 0.375rem 0 !important;
                 letter-spacing: 1px;
             }
             #phone::placeholder {
                 letter-spacing: 0;
-                opacity: 0.6;
             }
-            .phone-error {
+            .optional-badge {
+                font-size: 0.7rem;
+                color: rgba(255, 255, 255, 0.4);
+                font-weight: 400;
+                text-transform: lowercase;
+                margin-left: 0.3rem;
+            }
+            .form-error {
                 color: #ff6b6b;
-                font-size: 0.85rem;
-                margin-top: 0.5rem;
+                font-size: 0.82rem;
+                margin-top: 0.35rem;
                 display: none;
             }
-            .phone-error.show {
+            .form-error.show {
                 display: block;
             }
+            .form-row {
+                margin-bottom: 1rem;
+            }
+            .submit-row {
+                margin-top: 1.5rem;
+            }
             #submitButton {
+                padding: 0.7rem 2rem;
+                font-weight: 600;
+                font-size: 1rem;
                 transition: all 0.3s ease;
+                width: 100%;
             }
             #submitButton:not(.disabled):hover {
-                transform: translateY(-1px);
-                box-shadow: 0 4px 15px rgba(42, 85, 85, 0.4);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(42, 85, 85, 0.5);
+            }
+            #submitButton.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .success-card {
+                background: rgba(46, 204, 113, 0.15);
+                border: 1px solid rgba(46, 204, 113, 0.3);
+                border-radius: 0.75rem;
+                padding: 1.5rem;
+                margin-top: 1rem;
+                text-align: center;
+                backdrop-filter: blur(8px);
+            }
+            .success-card .check-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+            .success-card h4 {
+                color: #2ecc71;
+                margin-bottom: 0.3rem;
+            }
+            .success-card p {
+                color: rgba(255, 255, 255, 0.8);
+                margin: 0;
+                font-size: 0.9rem;
+            }
+            .error-msg {
+                color: #ff6b6b;
+                text-align: center;
+                margin-top: 1rem;
+                display: none;
+            }
+            .error-msg.show {
+                display: block;
+            }
+            .loader {
+                display: inline-block;
+                width: 18px;
+                height: 18px;
+                border: 2px solid rgba(255,255,255,0.3);
+                border-radius: 50%;
+                border-top-color: #fff;
+                animation: spin 0.6s linear infinite;
+                margin-right: 0.5rem;
+                vertical-align: middle;
+            }
+            @keyframes spin {
+                to { transform: rotate(360deg); }
             }
         </style>
     </head>
@@ -75,34 +161,52 @@
             <div class="masthead-content text-white">
                 <div class="container-fluid px-4 px-lg-0">
                     <h1 class="fst-italic lh-1 mb-4">Our Website is Coming Soon</h1>
-                    <p class="mb-5">We're working hard to finish the development of this site. Drop your number below to receive updates and to be notified when we launch!</p>
-                    <form id="contactForm" onsubmit="return false;">
-                        <!-- Phone number input -->
-                        <div class="row input-group-newsletter">
-                            <div class="col">
-                                <div class="phone-input-group">
-                                    <span class="phone-prefix">🇬🇭 +233</span>
-                                    <input class="form-control" id="phone" type="tel" placeholder="XX XXX XXXX" aria-label="Enter your Ghana phone number" maxlength="12" autocomplete="tel" />
-                                </div>
-                            </div>
-                            <div class="col-auto"><button class="btn btn-primary disabled" id="submitButton" type="submit">Notify Me!</button></div>
+                    <p class="mb-4">We're working hard to finish the development of this site. Drop your details below to be notified when we launch!</p>
+                    
+                    <!-- Sign-up Form -->
+                    <form id="signupForm" class="signup-form" onsubmit="return false;">
+                        <!-- Name -->
+                        <div class="form-row">
+                            <label class="form-label" for="fullName">Full Name</label>
+                            <input class="form-control" id="fullName" type="text" placeholder="Enter your full name" autocomplete="name" />
+                            <div class="form-error" id="nameError">Please enter your name.</div>
                         </div>
-                        <div class="phone-error" id="phoneError"></div>
-                        <!-- Submit success message-->
-                        <div class="d-none" id="submitSuccessMessage">
-                            <div class="text-center mb-3 mt-2">
-                                <div class="fw-bolder" style="color: #2ecc71;">✓ You're on the list!</div>
-                                We'll text you when we launch.
+
+                        <!-- Phone -->
+                        <div class="form-row">
+                            <label class="form-label" for="phone">Phone Number</label>
+                            <div class="phone-input-group">
+                                <span class="phone-prefix">🇬🇭 +233</span>
+                                <input class="form-control" id="phone" type="tel" placeholder="XX XXX XXXX" aria-label="Enter your Ghana phone number" maxlength="12" autocomplete="tel" />
                             </div>
+                            <div class="form-error" id="phoneError">Please enter a valid Ghanaian phone number.</div>
                         </div>
-                        <!-- Submit error message-->
-                        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3 mt-2">Error — please try again!</div></div>
+
+                        <!-- Email (optional) -->
+                        <div class="form-row">
+                            <label class="form-label" for="email">Email <span class="optional-badge">(optional)</span></label>
+                            <input class="form-control" id="email" type="email" placeholder="your@email.com" autocomplete="email" />
+                            <div class="form-error" id="emailError">Please enter a valid email address.</div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="submit-row">
+                            <button class="btn btn-primary" id="submitButton" type="submit">Notify Me!</button>
+                        </div>
+
+                        <div class="error-msg" id="serverError"></div>
                     </form>
+
+                    <!-- Success message (hidden by default) -->
+                    <div class="success-card d-none" id="successCard">
+                        <div class="check-icon">✅</div>
+                        <h4>You're on the list!</h4>
+                        <p>We'll notify you when we launch.</p>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- Social Icons-->
-        <!-- For more icon options, visit https://fontawesome.com/icons?d=gallery&p=2&s=brands-->
         <div class="social-icons">
             <div class="d-flex flex-row flex-lg-column justify-content-center align-items-center h-100 mt-3 mt-lg-0">
                 <a class="btn btn-dark m-3" href="#!"><i class="fab fa-twitter"></i></a>
@@ -112,104 +216,129 @@
         </div>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        <!-- Phone validation & form handling -->
         <script>
             (function () {
+                const nameInput = document.getElementById('fullName');
                 const phoneInput = document.getElementById('phone');
+                const emailInput = document.getElementById('email');
                 const submitBtn = document.getElementById('submitButton');
+                const nameError = document.getElementById('nameError');
                 const phoneError = document.getElementById('phoneError');
-                const successMsg = document.getElementById('submitSuccessMessage');
-                const errorMsg = document.getElementById('submitErrorMessage');
-                const form = document.getElementById('contactForm');
+                const emailError = document.getElementById('emailError');
+                const serverError = document.getElementById('serverError');
+                const successCard = document.getElementById('successCard');
+                const form = document.getElementById('signupForm');
 
-                // Valid Ghana mobile prefixes (after 0)
+                // Valid Ghana mobile prefixes (after removing leading 0)
                 const validPrefixes = [
-                    '20', '23', '24', '25', '26', '27', '28', '29', // Vodafone, MTN, AirtelTigo, etc.
-                    '50', '54', '55', '56', '57', '59'              // MTN, Vodafone, AirtelTigo, Glo
+                    '20','23','24','25','26','27','28','29',
+                    '50','54','55','56','57','59'
                 ];
 
-                function cleanNumber(val) {
-                    return val.replace(/\D/g, '');
-                }
+                function clean(val) { return val.replace(/\D/g, ''); }
 
                 function isValidGhanaNumber(digits) {
-                    // Expect 9 or 10 digits (with or without leading 0)
-                    let normalized = digits;
-                    if (normalized.startsWith('0') && normalized.length === 10) {
-                        normalized = normalized.substring(1);
-                    }
-                    if (normalized.length !== 9) return false;
-                    const prefix = normalized.substring(0, 2);
-                    return validPrefixes.includes(prefix);
+                    let n = digits;
+                    if (n.startsWith('0') && n.length === 10) n = n.substring(1);
+                    if (n.length !== 9) return false;
+                    return validPrefixes.includes(n.substring(0, 2));
                 }
 
-                function updateButton() {
-                    const digits = cleanNumber(phoneInput.value);
-                    if (digits.length >= 9) {
-                        submitBtn.classList.remove('disabled');
-                    } else {
-                        submitBtn.classList.add('disabled');
-                    }
+                function isValidEmail(email) {
+                    if (!email) return true; // optional
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
                 }
 
-                // Format as XX XXX XXXX while typing
+                function hideErrors() {
+                    nameError.classList.remove('show');
+                    phoneError.classList.remove('show');
+                    emailError.classList.remove('show');
+                    serverError.classList.remove('show');
+                }
+
+                // Auto-format phone number
                 phoneInput.addEventListener('input', function () {
-                    let digits = cleanNumber(this.value);
-                    // Remove leading 0 since we already show +233
+                    let digits = clean(this.value);
                     if (digits.startsWith('0')) digits = digits.substring(1);
-                    // Limit to 9 digits
                     if (digits.length > 9) digits = digits.substring(0, 9);
-                    // Format: XX XXX XXXX
                     let formatted = '';
                     for (let i = 0; i < digits.length; i++) {
                         if (i === 2 || i === 5) formatted += ' ';
                         formatted += digits[i];
                     }
                     this.value = formatted;
-                    phoneError.classList.remove('show');
-                    updateButton();
+                    hideErrors();
                 });
 
-                // Only allow digits
                 phoneInput.addEventListener('keypress', function (e) {
                     if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
                         e.preventDefault();
                     }
                 });
 
-                submitBtn.addEventListener('click', function () {
-                    if (this.classList.contains('disabled')) return;
+                nameInput.addEventListener('input', hideErrors);
+                emailInput.addEventListener('input', hideErrors);
 
-                    const digits = cleanNumber(phoneInput.value);
+                async function handleSubmit() {
+                    hideErrors();
+                    let valid = true;
 
-                    if (!isValidGhanaNumber(digits)) {
-                        phoneError.textContent = 'Please enter a valid Ghanaian phone number.';
+                    const name = nameInput.value.trim();
+                    const phoneDigits = clean(phoneInput.value);
+                    const email = emailInput.value.trim();
+
+                    if (!name) {
+                        nameError.classList.add('show');
+                        valid = false;
+                    }
+                    if (!isValidGhanaNumber(phoneDigits)) {
                         phoneError.classList.add('show');
-                        return;
+                        valid = false;
                     }
-
-                    // Format final number
-                    const fullNumber = '+233' + digits.replace(/^0/, '');
-
-                    // Show success
-                    phoneError.classList.remove('show');
-                    successMsg.classList.remove('d-none');
-                    errorMsg.classList.add('d-none');
-                    submitBtn.classList.add('disabled');
-                    submitBtn.textContent = 'Submitted!';
-                    phoneInput.disabled = true;
-
-                    console.log('Phone submitted: ', fullNumber);
-                });
-
-                // Allow Enter key to submit
-                phoneInput.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        submitBtn.click();
+                    if (email && !isValidEmail(email)) {
+                        emailError.classList.add('show');
+                        valid = false;
                     }
+                    if (!valid) return;
+
+                    // Format phone
+                    let normalized = phoneDigits;
+                    if (normalized.startsWith('0')) normalized = normalized.substring(1);
+                    const fullPhone = '+233' + normalized;
+
+                    // Show loading
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="loader"></span>Submitting...';
+
+                    try {
+                        const res = await fetch('/api/signup', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, phone: fullPhone, email: email || null })
+                        });
+                        const data = await res.json();
+
+                        if (res.ok && data.success) {
+                            form.classList.add('d-none');
+                            successCard.classList.remove('d-none');
+                        } else {
+                            serverError.textContent = data.error || 'Something went wrong.';
+                            serverError.classList.add('show');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = 'Notify Me!';
+                        }
+                    } catch (err) {
+                        serverError.textContent = 'Network error. Please try again.';
+                        serverError.classList.add('show');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Notify Me!';
+                    }
+                }
+
+                submitBtn.addEventListener('click', handleSubmit);
+                form.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); }
                 });
             })();
         </script>

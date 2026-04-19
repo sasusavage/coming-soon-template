@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Admin Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-primary: #0f1117;
+            --bg-secondary: #1a1d27;
+            --bg-card: #1e2130;
+            --border: #2a2d3a;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8b8fa3;
+            --accent: #2a5555;
+            --accent-light: #3a7575;
+            --accent-glow: rgba(42, 85, 85, 0.3);
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #141822 50%, var(--bg-primary) 100%);
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-card .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-card .logo .icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-card .logo h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .login-card .logo p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+
+        .login-card label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.4rem;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .login-card input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 1.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border: none;
+            border-radius: 0.5rem;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .login-error.show { display: block; }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .dashboard.active { display: block; }
+
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .topbar h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .topbar h1 i { color: var(--accent-light); }
+
+        .topbar-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn-icon {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .logout-btn {
+            color: var(--danger);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Stats Card */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-card .stat-icon {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            font-size: 1.5rem;
+            color: var(--accent-light);
+            opacity: 0.4;
+        }
+
+        /* Table */
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .table-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .search-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.85rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            width: 220px;
+            max-width: 100%;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: var(--bg-secondary);
+            padding: 0.85rem 1.2rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+
+        tbody tr:hover {
+            background: rgba(42, 85, 85, 0.08);
+        }
+
+        tbody td {
+            padding: 0.85rem 1.2rem;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .td-name {
+            font-weight: 600;
+        }
+
+        .td-phone {
+            font-family: 'DM Sans', monospace;
+            color: var(--accent-light);
+            font-weight: 500;
+        }
+
+        .td-email {
+            color: var(--text-secondary);
+        }
+
+        .td-email.empty {
+            color: var(--border);
+            font-style: italic;
+        }
+
+        .td-date {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+        }
+
+        .td-index {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        /* Loader */
+        .page-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent-light);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .topbar { padding: 0.8rem 1rem; }
+            .topbar h1 { font-size: 1rem; }
+            .container { padding: 1rem; }
+            .stat-card .stat-value { font-size: 2rem; }
+            .table-header { padding: 1rem; }
+            .search-box { width: 100%; }
+            .btn-icon span { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 1.5rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            thead th, tbody td { padding: 0.65rem 0.8rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card fade-in">
+            <div class="logo">
+                <div class="icon">🔒</div>
+                <h2>Admin Dashboard</h2>
+                <p>Enter your password to continue</p>
+            </div>
+            <div>
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password" autocomplete="current-password" />
+            </div>
+            <button class="login-btn" id="loginBtn">Sign In</button>
+            <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="topbar">
+            <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+            <div class="topbar-actions">
+                <button class="btn-icon" id="refreshBtn" title="Refresh data">
+                    <i class="fas fa-sync-alt"></i> <span>Refresh</span>
+                </button>
+                <button class="btn-icon logout-btn" id="logoutBtn" title="Sign out">
+                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                </button>
+            </div>
+        </div>
+        <div class="container">
+            <!-- Stats -->
+            <div class="stats-grid fade-in">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-label">Total Sign-ups</div>
+                    <div class="stat-value" id="totalCount">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="stat-label">With Email</div>
+                    <div class="stat-value" id="emailCount">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-label">Latest Sign-up</div>
+                    <div class="stat-value" id="latestTime" style="font-size:1.1rem;margin-top:0.5rem;">—</div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-card fade-in">
+                <div class="table-header">
+                    <h3><i class="fas fa-list" style="color:var(--accent-light);margin-right:0.4rem;"></i> All Sign-ups</h3>
+                    <input type="text" class="search-box" id="searchBox" placeholder="Search by name or phone..." />
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signupsTableBody">
+                            <tr><td colspan="5"><div class="page-loader"><div class="spinner"></div></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            let adminPassword = '';
+            let allSignups = [];
+
+            const loginScreen = document.getElementById('loginScreen');
+            const dashboard = document.getElementById('dashboard');
+            const passwordInput = document.getElementById('adminPassword');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginError = document.getElementById('loginError');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const totalCount = document.getElementById('totalCount');
+            const emailCount = document.getElementById('emailCount');
+            const latestTime = document.getElementById('latestTime');
+            const tableBody = document.getElementById('signupsTableBody');
+            const searchBox = document.getElementById('searchBox');
+
+            // Login
+            async function login() {
+                const pwd = passwordInput.value;
+                if (!pwd) return;
+
+                loginBtn.textContent = 'Signing in...';
+                loginBtn.disabled = true;
+                loginError.classList.remove('show');
+
+                try {
+                    const res = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: pwd })
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        adminPassword = pwd;
+                        allSignups = data.signups;
+                        showDashboard(data);
+                    } else {
+                        loginError.classList.add('show');
+                        loginBtn.textContent = 'Sign In';
+                        loginBtn.disabled = false;
+                    }
+                } catch (err) {
+                    loginError.textContent = 'Network error. Try again.';
+                    loginError.classList.add('show');
+                    loginBtn.textContent = 'Sign In';
+                    loginBtn.disabled = false;
+                }
+            }
+
+            loginBtn.addEventListener('click', login);
+            passwordInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter') login();
+            });
+
+            // Show dashboard
+            function showDashboard(data) {
+                loginScreen.style.display = 'none';
+                dashboard.classList.add('active');
+                updateStats(data);
+                renderTable(data.signups);
+            }
+
+            function updateStats(data) {
+                totalCount.textContent = data.total;
+                const withEmail = data.signups.filter(s => s.email).length;
+                emailCount.textContent = withEmail;
+
+                if (data.signups.length > 0) {
+                    const latest = new Date(data.signups[0].created_at);
+                    latestTime.textContent = formatDate(latest);
+                } else {
+                    latestTime.textContent = 'No sign-ups yet';
+                }
+            }
+
+            function renderTable(signups) {
+                if (signups.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr><td colspan="5">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>No sign-ups yet</p>
+                            </div>
+                        </td></tr>`;
+                    return;
+                }
+
+                tableBody.innerHTML = signups.map((s, i) => `
+                    <tr>
+                        <td class="td-index">${i + 1}</td>
+                        <td class="td-name">${escapeHtml(s.name)}</td>
+                        <td class="td-phone">${escapeHtml(s.phone)}</td>
+                        <td class="${s.email ? 'td-email' : 'td-email empty'}">${s.email ? escapeHtml(s.email) : '—'}</td>
+                        <td class="td-date">${formatDate(new Date(s.created_at))}</td>
+                    </tr>
+                `).join('');
+            }
+
+            function formatDate(d) {
+                const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                const day = d.getDate();
+                const month = months[d.getMonth()];
+                const year = d.getFullYear();
+                let hours = d.getHours();
+                const mins = String(d.getMinutes()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+                return `${month} ${day}, ${year} ${hours}:${mins} ${ampm}`;
+            }
+
+            function escapeHtml(text) {
+                const el = document.createElement('span');
+                el.textContent = text;
+                return el.innerHTML;
+            }
+
+            // Search
+            searchBox.addEventListener('input', function () {
+                const q = this.value.toLowerCase().trim();
+                if (!q) {
+                    renderTable(allSignups);
+                    return;
+                }
+                const filtered = allSignups.filter(s =>
+                    s.name.toLowerCase().includes(q) ||
+                    s.phone.includes(q) ||
+                    (s.email && s.email.toLowerCase().includes(q))
+                );
+                renderTable(filtered);
+            });
+
+            // Refresh
+            refreshBtn.addEventListener('click', async function () {
+                this.querySelector('i').classList.add('fa-spin');
+                try {
+                    const res = await fetch('/api/admin/signups', {
+                        headers: { 'X-Admin-Password': adminPassword }
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        allSignups = data.signups;
+                        updateStats(data);
+                        renderTable(data.signups);
+                    }
+                } catch (err) {
+                    console.error('Refresh failed:', err);
+                }
+                setTimeout(() => {
+                    this.querySelector('i').classList.remove('fa-spin');
+                }, 500);
+            });
+
+            // Logout
+            logoutBtn.addEventListener('click', function () {
+                adminPassword = '';
+                allSignups = [];
+                loginScreen.style.display = 'flex';
+                dashboard.classList.remove('active');
+                passwordInput.value = '';
+                loginBtn.textContent = 'Sign In';
+                loginBtn.disabled = false;
+                loginError.classList.remove('show');
+            });
+        })();
+    </script>
+</body>
+</html>

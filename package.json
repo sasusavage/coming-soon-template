@@ -36,7 +36,10 @@
         "url": "https://github.com/StartBootstrap/startbootstrap-coming-soon.git"
     },
     "dependencies": {
-        "bootstrap": "5.2.3"
+        "bootstrap": "5.2.3",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "pg": "^8.20.0"
     },
     "devDependencies": {
         "autoprefixer": "10.4.14",
